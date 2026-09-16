@@ -2,6 +2,8 @@
 
 Sistema web simples para controle de uma pequena papelaria. O projeto reúne cadastro de produtos, estoque, venda e histórico em uma única aplicação que funciona direto no navegador.
 
+**Demo online:** https://elieci13.github.io/papelaria-facil/
+
 ## O que dá para fazer
 
 - cadastrar, editar, pesquisar e excluir produtos;
@@ -30,7 +32,7 @@ Os produtos e as vendas ficam armazenados no `LocalStorage` do navegador. Não h
 
 ## Como testar
 
-Não há dependências para instalar. Basta abrir o arquivo `index.html` no navegador. O projeto também pode ser publicado diretamente no GitHub Pages.
+A forma mais rápida é acessar a demo online. Também é possível baixar os arquivos e abrir `index.html` diretamente no navegador. Não há dependências para instalar.
 
 ## Por que criei este projeto
 
