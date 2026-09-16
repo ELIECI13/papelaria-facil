@@ -1,124 +1,25 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistema simples para controle de produtos, estoque e vendas de uma pequena papelaria.">
-  <title>Papelaria Fácil</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header class="topbar">
-    <div>
-      <span class="eyebrow">CONTROLE DA LOJA</span>
-      <h1>Papelaria Fácil</h1>
-      <p>Produtos, estoque e vendas em um só lugar.</p>
-    </div>
-    <button id="themeBtn" class="ghost" type="button" aria-label="Alternar tema">Tema escuro</button>
-  </header>
-
-  <main class="container">
-    <section class="stats" aria-label="Resumo">
-      <article><span>Produtos</span><strong id="statProducts">0</strong></article>
-      <article><span>Unidades em estoque</span><strong id="statStock">0</strong></article>
-      <article><span>Estoque baixo</span><strong id="statLow">0</strong></article>
-      <article><span>Vendas registradas</span><strong id="statSales">R$ 0,00</strong></article>
-    </section>
-
-    <nav class="tabs" aria-label="Seções do sistema">
-      <button class="tab active" data-tab="products">Produtos</button>
-      <button class="tab" data-tab="sale">Nova venda</button>
-      <button class="tab" data-tab="history">Histórico</button>
-    </nav>
-
-    <section id="products" class="panel tab-panel active">
-      <div class="panel-head">
-        <div><h2>Produtos</h2><p>Cadastre itens e acompanhe o estoque.</p></div>
-        <button id="newProductBtn" class="primary" type="button">+ Novo produto</button>
-      </div>
-
-      <div class="toolbar">
-        <input id="searchProduct" type="search" placeholder="Buscar produto..." aria-label="Buscar produto">
-        <select id="stockFilter" aria-label="Filtrar estoque">
-          <option value="all">Todos</option>
-          <option value="low">Estoque baixo</option>
-          <option value="out">Sem estoque</option>
-        </select>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Produto</th><th>Custo</th><th>Venda</th><th>Margem</th><th>Estoque</th><th></th></tr></thead>
-          <tbody id="productRows"></tbody>
-        </table>
-      </div>
-      <p id="productEmpty" class="empty">Nenhum produto cadastrado.</p>
-    </section>
-
-    <section id="sale" class="panel tab-panel">
-      <div class="panel-head"><div><h2>Nova venda</h2><p>Monte o pedido e confira o total antes de finalizar.</p></div></div>
-      <div class="sale-grid">
-        <div>
-          <label for="saleProduct">Produto</label>
-          <select id="saleProduct"><option value="">Selecione...</option></select>
-        </div>
-        <div>
-          <label for="saleQty">Quantidade</label>
-          <input id="saleQty" type="number" min="1" value="1">
-        </div>
-        <button id="addCartBtn" class="primary align-end" type="button">Adicionar</button>
-      </div>
-
-      <div id="cart" class="cart"></div>
-      <p id="cartEmpty" class="empty">O carrinho está vazio.</p>
-
-      <div class="checkout">
-        <div>
-          <label for="discount">Desconto (%)</label>
-          <input id="discount" type="number" min="0" max="100" step="0.01" value="0">
-        </div>
-        <div class="totals">
-          <span>Subtotal <strong id="subtotal">R$ 0,00</strong></span>
-          <span>Desconto <strong id="discountValue">R$ 0,00</strong></span>
-          <span class="grand">Total <strong id="grandTotal">R$ 0,00</strong></span>
-        </div>
-      </div>
-      <div class="actions right"><button id="clearCartBtn" class="ghost" type="button">Limpar</button><button id="finishSaleBtn" class="primary" type="button">Finalizar venda</button></div>
-    </section>
-
-    <section id="history" class="panel tab-panel">
-      <div class="panel-head">
-        <div><h2>Histórico de vendas</h2><p>Registros armazenados neste navegador.</p></div>
-        <button id="exportBtn" class="ghost" type="button">Exportar CSV</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Data</th><th>Itens</th><th>Total</th><th></th></tr></thead>
-          <tbody id="historyRows"></tbody>
-        </table>
-      </div>
-      <p id="historyEmpty" class="empty">Nenhuma venda registrada.</p>
-    </section>
-  </main>
-
-  <dialog id="productDialog">
-    <form id="productForm" method="dialog">
-      <div class="modal-head"><div><span class="eyebrow">CADASTRO</span><h2 id="dialogTitle">Novo produto</h2></div><button id="closeDialog" class="icon" type="button" aria-label="Fechar">×</button></div>
-      <input id="productId" type="hidden">
-      <label for="productName">Nome do produto</label>
-      <input id="productName" required maxlength="80" placeholder="Ex.: Caderno 10 matérias">
-      <div class="form-grid">
-        <div><label for="productCost">Preço de custo</label><input id="productCost" required type="number" min="0" step="0.01" placeholder="0,00"></div>
-        <div><label for="productPrice">Preço de venda</label><input id="productPrice" required type="number" min="0" step="0.01" placeholder="0,00"></div>
-        <div><label for="productStock">Estoque atual</label><input id="productStock" required type="number" min="0" step="1" value="0"></div>
-        <div><label for="productMin">Estoque mínimo</label><input id="productMin" required type="number" min="0" step="1" value="5"></div>
-      </div>
-      <p id="marginPreview" class="margin-preview">Margem: —</p>
-      <div class="actions right"><button id="cancelDialog" class="ghost" type="button">Cancelar</button><button class="primary" type="submit">Salvar produto</button></div>
-    </form>
-  </dialog>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="script.js"></script>
-</body>
-</html>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Precificação Papelaria Pro</title>
+<style>
+:root{--shopee:#ee4d2d;--bg:#f0f2f5;--text:#333;--muted:#777}*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);padding:10px}.container{background:#fff;padding:20px;border-radius:15px;box-shadow:0 8px 20px #0000001a;width:100%;max-width:780px;margin:auto}h2{color:var(--shopee);text-align:center;margin:0 0 5px}.sub{text-align:center;font-size:12px;color:var(--muted);margin:0 0 20px}.grid-insumo{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:center}.grid-header{font-size:10px;font-weight:bold;color:#999;text-transform:uppercase;margin-bottom:4px;padding:0 5px}.insumo-card{background:#fafafa;border:1px solid #eee;border-radius:8px;padding:10px;margin-bottom:8px}input,select{width:100%;padding:9px;border:1px solid #ddd;border-radius:6px;font-size:13px}.btn-del{border:0;background:#fff0ed;color:#c43b21;border-radius:6px;padding:8px;cursor:pointer}.config-venda{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin-top:25px;background:#fff5f2;padding:15px;border-radius:10px;border:1px solid #ffdbd3}label{font-size:11px;font-weight:bold;display:block;margin-bottom:5px}.result-box{background:var(--shopee);color:#fff;border-radius:12px;padding:20px;margin-top:20px;text-align:center}.price-main{font-size:38px;font-weight:bold;display:block}.profit-line{background:#0003;padding:10px;border-radius:8px;margin-top:10px;font-weight:bold;font-size:20px}.resumo-custos{font-size:13px;margin-top:15px;color:#555;background:#eee;padding:15px;border-radius:10px;line-height:1.8}.no-print{display:flex;gap:10px;margin-top:20px}.btn{flex:1;padding:12px;border:0;border-radius:8px;font-weight:bold;cursor:pointer}.btn-print{background:#34495e;color:#fff}.btn-add{background:#27ae60;color:#fff}.hint{font-size:11px;color:#888;margin:10px 0 0}.error{color:#b42318;font-weight:600}
+@media(max-width:600px){body{padding:6px}.container{padding:14px}.grid-insumo{grid-template-columns:1.7fr 1fr 1fr 1fr auto;gap:4px}.grid-header{font-size:8px;padding:0}.insumo-card{padding:7px}.insumo-card input{padding:8px 5px;font-size:12px}.config-venda{grid-template-columns:1fr;gap:10px}.price-main{font-size:34px}.no-print{flex-direction:column}.btn-del{padding:7px 5px}}
+@media print{.no-print,.btn-del,.config-venda select{display:none!important}body{background:#fff;padding:0}.container{box-shadow:none;max-width:100%}.insumo-card{border:1px solid #eee}input{border:0!important;background:transparent!important}}
+</style>
+</head><body><div class="container" id="app">
+<h2>Precificação Papelaria Pro</h2><p class="sub">Calculadora de custos e preço de venda para marketplace</p>
+<div class="grid-insumo"><div class="grid-header">Insumo</div><div class="grid-header">R$ Compra</div><div class="grid-header">Qtd Total</div><div class="grid-header">Qtd Uso</div><div></div></div>
+<div id="listaInsumos"></div>
+<div class="no-print"><button class="btn btn-add" onclick="addInsumo('',0,0,0)">+ Adicionar Material</button></div>
+<div class="config-venda"><div><label>LUCRO DESEJADO %</label><input type="number" id="margem" value="30" min="0" step="0.1" oninput="calcular()"></div><div><label>TAXA DO MARKETPLACE</label><select id="freteGratis" onchange="calcular()"><option value="14">14%</option><option value="20" selected>20% (frete grátis)</option></select></div><div><label>TAXA FIXA R$</label><input type="number" id="taxaFixa" value="4" min="0" step="0.01" oninput="calcular()"></div></div>
+<div class="result-box"><span style="font-size:12px;font-weight:bold">PREÇO FINAL PARA O ANÚNCIO</span><span id="resVenda" class="price-main">R$ 0,00</span><div class="profit-line" id="resLucro">Lucro Líquido: R$ 0,00</div></div>
+<div class="resumo-custos">Total Materiais: <b id="resCustoMat">R$ 0,00</b> | Taxas: <b id="resTaxas">R$ 0,00</b><br>Custo total + taxas: <b id="resTotal">R$ 0,00</b> | Margem real: <b id="resMargem">0%</b><div id="aviso" class="hint"></div></div>
+<div class="no-print"><button class="btn btn-print" onclick="window.print()">🖨️ Imprimir ou Salvar PDF</button><button class="btn" style="background:#e9ecef" onclick="limparUsos()">Limpar quantidades</button></div>
+</div><script>
+const itensIniciais=[{nome:'Folha A4',preco:25,total:1000},{nome:'Papel Fotográfico',preco:0,total:0},{nome:'Papel Fotog. Adesivo',preco:0,total:0},{nome:'BOPP (Metros)',preco:0,total:0},{nome:'Capa A5 (Unid)',preco:0,total:0},{nome:'Wire-o',preco:0,total:0},{nome:'Elástico (Metros)',preco:0,total:0},{nome:'Tassel',preco:0,total:0},{nome:'Passante',preco:0,total:0},{nome:'Ilhós',preco:0,total:0},{nome:'Embalagem',preco:0,total:0},{nome:'Plástico Bolha (m)',preco:0,total:0},{nome:'Termoencolhível (m)',preco:0,total:0},{nome:'Mimo / Brinde',preco:0,total:0},{nome:'Energia',preco:0,total:1},{nome:'Tinta Impressora',preco:0,total:1}];
+const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});function addInsumo(nome='',preco=0,total=0,uso=0){const d=document.createElement('div');d.className='insumo-card';d.innerHTML=`<div class="grid-insumo"><input type="text" value="${nome}" class="nome" aria-label="Insumo"><input type="number" min="0" step="0.01" value="${preco||''}" class="valor-total" oninput="calcular()"><input type="number" min="0" step="0.01" value="${total||''}" class="qtd-total" oninput="calcular()"><input type="number" min="0" step="0.01" value="${uso||''}" class="qtd-uso" oninput="calcular()"><button class="btn-del" title="Remover material" onclick="this.closest('.insumo-card').remove();calcular()">✕</button></div>`;document.getElementById('listaInsumos').appendChild(d)}
+function calcular(){let custo=0,invalido=false;const cards=document.querySelectorAll('.insumo-card');cards.forEach(c=>{const v=parseFloat(c.querySelector('.valor-total').value)||0,q=parseFloat(c.querySelector('.qtd-total').value)||0,u=parseFloat(c.querySelector('.qtd-uso').value)||0;if(v>0&&u>0&&q<=0){invalido=true;return}if(q>0)custo+=(v/q)*u});const comissao=parseFloat(document.getElementById('freteGratis').value)||0,margem=parseFloat(document.getElementById('margem').value)||0,taxaFixa=parseFloat(document.getElementById('taxaFixa').value)||0,divisor=1-((comissao+margem)/100);let venda=divisor>0?(custo+taxaFixa)/divisor:0;const taxas=venda*(comissao/100)+taxaFixa,lucro=venda-taxas-custo,margemReal=venda>0?lucro/venda*100:0;document.getElementById('resCustoMat').textContent=brl(custo);document.getElementById('resTaxas').textContent=brl(taxas);document.getElementById('resTotal').textContent=brl(custo+taxas);document.getElementById('resVenda').textContent=brl(venda);document.getElementById('resLucro').textContent='Lucro Líquido: '+brl(lucro);document.getElementById('resMargem').textContent=margemReal.toFixed(1).replace('.',',')+'%';const av=document.getElementById('aviso');av.className='hint'+(invalido||divisor<=0?' error':'');av.textContent=invalido?'Preencha a quantidade total dos materiais que possuem valor e uso.':divisor<=0?'A soma da taxa e do lucro desejado precisa ser menor que 100%.':'O cálculo considera custo proporcional dos materiais, percentual do marketplace e taxa fixa.'}
+function limparUsos(){document.querySelectorAll('.qtd-uso').forEach(i=>i.value='');calcular()}window.onload=()=>{itensIniciais.forEach(i=>addInsumo(i.nome,i.preco,i.total));calcular()};
+</script></body></html>
