@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema simples para controle de produtos, estoque e vendas de uma pequena papelaria.">
+  <title>Papelaria Fácil</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <span class="eyebrow">CONTROLE DA LOJA</span>
+      <h1>Papelaria Fácil</h1>
+      <p>Produtos, estoque e vendas em um só lugar.</p>
+    </div>
+    <button id="themeBtn" class="ghost" type="button" aria-label="Alternar tema">Tema escuro</button>
+  </header>
+
+  <main class="container">
+    <section class="stats" aria-label="Resumo">
+      <article><span>Produtos</span><strong id="statProducts">0</strong></article>
+      <article><span>Unidades em estoque</span><strong id="statStock">0</strong></article>
+      <article><span>Estoque baixo</span><strong id="statLow">0</strong></article>
+      <article><span>Vendas registradas</span><strong id="statSales">R$ 0,00</strong></article>
+    </section>
+
+    <nav class="tabs" aria-label="Seções do sistema">
+      <button class="tab active" data-tab="products">Produtos</button>
+      <button class="tab" data-tab="sale">Nova venda</button>
+      <button class="tab" data-tab="history">Histórico</button>
+    </nav>
+
+    <section id="products" class="panel tab-panel active">
+      <div class="panel-head">
+        <div><h2>Produtos</h2><p>Cadastre itens e acompanhe o estoque.</p></div>
+        <button id="newProductBtn" class="primary" type="button">+ Novo produto</button>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchProduct" type="search" placeholder="Buscar produto..." aria-label="Buscar produto">
+        <select id="stockFilter" aria-label="Filtrar estoque">
+          <option value="all">Todos</option>
+          <option value="low">Estoque baixo</option>
+          <option value="out">Sem estoque</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Produto</th><th>Custo</th><th>Venda</th><th>Margem</th><th>Estoque</th><th></th></tr></thead>
+          <tbody id="productRows"></tbody>
+        </table>
+      </div>
+      <p id="productEmpty" class="empty">Nenhum produto cadastrado.</p>
+    </section>
+
+    <section id="sale" class="panel tab-panel">
+      <div class="panel-head"><div><h2>Nova venda</h2><p>Monte o pedido e confira o total antes de finalizar.</p></div></div>
+      <div class="sale-grid">
+        <div>
+          <label for="saleProduct">Produto</label>
+          <select id="saleProduct"><option value="">Selecione...</option></select>
+        </div>
+        <div>
+          <label for="saleQty">Quantidade</label>
+          <input id="saleQty" type="number" min="1" value="1">
+        </div>
+        <button id="addCartBtn" class="primary align-end" type="button">Adicionar</button>
+      </div>
+
+      <div id="cart" class="cart"></div>
+      <p id="cartEmpty" class="empty">O carrinho está vazio.</p>
+
+      <div class="checkout">
+        <div>
+          <label for="discount">Desconto (%)</label>
+          <input id="discount" type="number" min="0" max="100" step="0.01" value="0">
+        </div>
+        <div class="totals">
+          <span>Subtotal <strong id="subtotal">R$ 0,00</strong></span>
+          <span>Desconto <strong id="discountValue">R$ 0,00</strong></span>
+          <span class="grand">Total <strong id="grandTotal">R$ 0,00</strong></span>
+        </div>
+      </div>
+      <div class="actions right"><button id="clearCartBtn" class="ghost" type="button">Limpar</button><button id="finishSaleBtn" class="primary" type="button">Finalizar venda</button></div>
+    </section>
+
+    <section id="history" class="panel tab-panel">
+      <div class="panel-head">
+        <div><h2>Histórico de vendas</h2><p>Registros armazenados neste navegador.</p></div>
+        <button id="exportBtn" class="ghost" type="button">Exportar CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Data</th><th>Itens</th><th>Total</th><th></th></tr></thead>
+          <tbody id="historyRows"></tbody>
+        </table>
+      </div>
+      <p id="historyEmpty" class="empty">Nenhuma venda registrada.</p>
+    </section>
+  </main>
+
+  <dialog id="productDialog">
+    <form id="productForm" method="dialog">
+      <div class="modal-head"><div><span class="eyebrow">CADASTRO</span><h2 id="dialogTitle">Novo produto</h2></div><button id="closeDialog" class="icon" type="button" aria-label="Fechar">×</button></div>
+      <input id="productId" type="hidden">
+      <label for="productName">Nome do produto</label>
+      <input id="productName" required maxlength="80" placeholder="Ex.: Caderno 10 matérias">
+      <div class="form-grid">
+        <div><label for="productCost">Preço de custo</label><input id="productCost" required type="number" min="0" step="0.01" placeholder="0,00"></div>
+        <div><label for="productPrice">Preço de venda</label><input id="productPrice" required type="number" min="0" step="0.01" placeholder="0,00"></div>
+        <div><label for="productStock">Estoque atual</label><input id="productStock" required type="number" min="0" step="1" value="0"></div>
+        <div><label for="productMin">Estoque mínimo</label><input id="productMin" required type="number" min="0" step="1" value="5"></div>
+      </div>
+      <p id="marginPreview" class="margin-preview">Margem: —</p>
+      <div class="actions right"><button id="cancelDialog" class="ghost" type="button">Cancelar</button><button class="primary" type="submit">Salvar produto</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
